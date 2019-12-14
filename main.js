@@ -48,6 +48,20 @@ const populateVoiceList = () => {
   voiceSelect.selectedIndex = selectedIndex;
 };
 
+const finishUtterance = () => {
+  speechApi.synth.cancel();
+
+  playButton.disabled = false;
+  pauseButton.disabled = true;
+  stopButton.disabled = true;
+
+  rateSlider.disabled = false;
+  pitchSlider.disabled = false;
+  voiceSelect.disabled = false;
+
+  urlOrTextInput.disabled = false;
+};
+
 const getWebsiteTexts = siteUrl => new Promise((resolve, reject) => {
   axios
     .get(siteUrl)
@@ -67,17 +81,9 @@ const getWebsiteTexts = siteUrl => new Promise((resolve, reject) => {
       const errorObj = err.toJSON();
       alert(`${errorObj.message} on ${errorObj.config.url}\nPlease try a different website`);
       urlOrTextInput.value = '';
+      finishUtterance();
     });
 });
-
-const finishUtteranceCallback = () => {
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-  stopButton.disabled = true;
-
-  rateSlider.disabled = false;
-  pitchSlider.disabled = false;
-};
 
 const read = () => {
   const urlOrText = urlOrTextInput.value;
@@ -102,11 +108,11 @@ const read = () => {
         voice,
         pitchSlider.value,
         rateSlider.value,
-        finishUtteranceCallback,
+        finishUtterance,
       );
     });
   } else {
-    speechApi.speak(urlOrText, voice, pitchSlider.value, rateSlider.value, finishUtteranceCallback);
+    speechApi.speak(urlOrText, voice, pitchSlider.value, rateSlider.value, finishUtterance);
   }
 };
 
@@ -133,9 +139,9 @@ playButton.addEventListener('click', () => {
 
   rateSlider.disabled = true;
   pitchSlider.disabled = true;
-  pitchSlider.disabled = true;
-
   voiceSelect.disabled = true;
+
+  urlOrTextInput.disabled = true;
 });
 
 pauseButton.addEventListener('click', () => {
@@ -148,18 +154,12 @@ pauseButton.addEventListener('click', () => {
   rateSlider.disabled = true;
   pitchSlider.disabled = true;
   voiceSelect.disabled = true;
+
+  urlOrTextInput.disabled = true;
 });
 
 stopButton.addEventListener('click', () => {
-  speechApi.synth.cancel();
-
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-  stopButton.disabled = true;
-
-  rateSlider.disabled = false;
-  pitchSlider.disabled = false;
-  voiceSelect.disabled = false;
+  finishUtterance();
 });
 
 // FIRE

@@ -30429,6 +30429,17 @@ var populateVoiceList = function populateVoiceList() {
   voiceSelect.selectedIndex = selectedIndex;
 };
 
+var finishUtterance = function finishUtterance() {
+  speechApi.synth.cancel();
+  playButton.disabled = false;
+  pauseButton.disabled = true;
+  stopButton.disabled = true;
+  rateSlider.disabled = false;
+  pitchSlider.disabled = false;
+  voiceSelect.disabled = false;
+  urlOrTextInput.disabled = false;
+};
+
 var getWebsiteTexts = function getWebsiteTexts(siteUrl) {
   return new Promise(function (resolve, reject) {
     _axios.default.get(siteUrl).then(function (result) {
@@ -30447,16 +30458,9 @@ var getWebsiteTexts = function getWebsiteTexts(siteUrl) {
       var errorObj = err.toJSON();
       alert("".concat(errorObj.message, " on ").concat(errorObj.config.url, "\nPlease try a different website"));
       urlOrTextInput.value = '';
+      finishUtterance();
     });
   });
-};
-
-var finishUtteranceCallback = function finishUtteranceCallback() {
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-  stopButton.disabled = true;
-  rateSlider.disabled = false;
-  pitchSlider.disabled = false;
 };
 
 var read = function read() {
@@ -30476,10 +30480,10 @@ var read = function read() {
   if (isUrl) {
     getWebsiteTexts(urlOrText).then(function (texts) {
       var allTextsWithPauseBetween = texts.join(' . ');
-      speechApi.speak(allTextsWithPauseBetween, voice, pitchSlider.value, rateSlider.value, finishUtteranceCallback);
+      speechApi.speak(allTextsWithPauseBetween, voice, pitchSlider.value, rateSlider.value, finishUtterance);
     });
   } else {
-    speechApi.speak(urlOrText, voice, pitchSlider.value, rateSlider.value, finishUtteranceCallback);
+    speechApi.speak(urlOrText, voice, pitchSlider.value, rateSlider.value, finishUtterance);
   }
 }; // listeners
 
@@ -30505,8 +30509,8 @@ playButton.addEventListener('click', function () {
   stopButton.disabled = false;
   rateSlider.disabled = true;
   pitchSlider.disabled = true;
-  pitchSlider.disabled = true;
   voiceSelect.disabled = true;
+  urlOrTextInput.disabled = true;
 });
 pauseButton.addEventListener('click', function () {
   speechApi.synth.pause();
@@ -30516,15 +30520,10 @@ pauseButton.addEventListener('click', function () {
   rateSlider.disabled = true;
   pitchSlider.disabled = true;
   voiceSelect.disabled = true;
+  urlOrTextInput.disabled = true;
 });
 stopButton.addEventListener('click', function () {
-  speechApi.synth.cancel();
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-  stopButton.disabled = true;
-  rateSlider.disabled = false;
-  pitchSlider.disabled = false;
-  voiceSelect.disabled = false;
+  finishUtterance();
 }); // FIRE
 
 var fire = function fire() {
@@ -30567,7 +30566,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63524" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59569" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
