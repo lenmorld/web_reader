@@ -10,5 +10,8 @@
 	"scripts": {
 		"dev": "parcel index.html -p 5001",
 		"build": "parcel build index.html"
+	},
+	"devDependencies": {
+		"cssnano": "^4.1.10"
 	}
 }
