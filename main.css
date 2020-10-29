@@ -7,6 +7,11 @@ html {
 	color: white;
 }
 
+html {
+	max-width: 768px;
+	margin: 0 auto;
+}
+
 body {
 	height: 90%;
 	max-width: 80%;
@@ -22,11 +27,13 @@ section {
 	margin-top: 4rem;
 }
 
-section div {
+section > div {
 	margin: 10px;
+	flex-grow: 1;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
+	justify-content: space-between;
+	align-items: center;
 }
 
 button,
@@ -35,11 +42,13 @@ select {
 	padding: 5px;
 }
 
-button {
-	margin: 0 2rem;
+select {
+	flex-grow: 1;
+	max-width: 100%;
 }
 
 textarea {
+	flex-grow: 1;
 	font-size: 2rem;
 	word-wrap: break-word;
 	overflow: auto;
@@ -51,7 +60,7 @@ header {
 }
 
 input {
-	width: 75%;
+	width: 80%;
 }
 
 a:link,
